@@ -1,0 +1,19 @@
+---
+
+- id: 4a10000a-cafe-4001-8001-c0ffee00000a
+  name: Phishing simulant - open malicious document (L6 step 1)
+  description: Simulate a user opening a phishing attachment by spawning a Word-like process and dropping an initial-access artefact
+  tactic: execution
+  technique:
+    attack_id: T1204.002
+    name: "User Execution: Malicious File"
+  platforms:
+    windows:
+      psh:
+        command: |
+          $lureFile = "$env:TEMP\Invoice_Q4_$(Get-Date -Format 'yyyyMMdd').docm";
+          Set-Content -Path $lureFile -Value "[L6] SOC-Fundamentals phishing lure opened by $env:USERNAME at $(Get-Date -Format 'o')";
+          Write-Host "[L6-1] Phishing document simulant created: $lureFile";
+          Start-Process -FilePath "notepad.exe" -ArgumentList $lureFile -WindowStyle Hidden
+        cleanup: |
+          Remove-Item -Force "$env:TEMP\Invoice_Q4_*.docm" -ErrorAction SilentlyContinue

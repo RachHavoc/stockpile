@@ -1,0 +1,17 @@
+---
+
+- id: 4a10000c-cafe-4001-8001-c0ffee00000c
+  name: AD account abuse - add to Domain Admins (L6 step 3)
+  description: Abuse an existing AD account to add it to Domain Admins, generating Windows 4728 (member added to global security group)
+  tactic: credential-access
+  technique:
+    attack_id: T1098
+    name: Account Manipulation
+  platforms:
+    windows:
+      cmd:
+        command: |
+          net group "Domain Admins" #{domain}\#{domain.user.name} /add /domain 2>nul
+          echo [L6-3] Account #{domain.user.name} added to Domain Admins
+        cleanup: |
+          net group "Domain Admins" #{domain}\#{domain.user.name} /delete /domain 2>nul

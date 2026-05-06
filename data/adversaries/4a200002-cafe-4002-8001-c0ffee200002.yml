@@ -1,0 +1,14 @@
+---
+
+id: 4a200002-cafe-4002-8001-c0ffee200002
+name: "L5 - Alert Generator"
+description: Eight-step attack chain fired ~10 minutes apart during L5 morning; each step generates a distinct alert for live student triage
+atomic_ordering:
+  - 4a100002-cafe-4001-8001-c0ffee000002 # Step 1 - Encoded PowerShell on wks01 (T1059.001)
+  - 4a100003-cafe-4001-8001-c0ffee000003 # Step 2 - DNS query to never-before-seen domain (T1071.004)
+  - 4a100004-cafe-4001-8001-c0ffee000004 # Step 3 - Burst of failed logons against dc01 (T1110.001)
+  - 4a100005-cafe-4001-8001-c0ffee000005 # Step 4 - WMI lateral movement wks01 -> wks02 (T1021.006)
+  - 4a100006-cafe-4001-8001-c0ffee000006 # Step 5 - Large outbound data transfer from wks02 (T1041)
+  - 4a100007-cafe-4001-8001-c0ffee000007 # Step 6 - Scheduled task creation (T1053.005)
+  - 4a100008-cafe-4001-8001-c0ffee000008 # Step 7 - Process injection via CreateRemoteThread (T1055.003)
+  - 4a100009-cafe-4001-8001-c0ffee000009 # Step 8 - Add account to local Administrators (T1098.001)

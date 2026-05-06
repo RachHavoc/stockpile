@@ -1,0 +1,20 @@
+---
+
+- id: 4a100007-cafe-4001-8001-c0ffee000007
+  name: Scheduled task creation (L5 step 6)
+  description: Register a scheduled task to generate Windows event 4698, which students must detect and correlate
+  tactic: persistence
+  technique:
+    attack_id: T1053.005
+    name: "Scheduled Task/Job: Scheduled Task"
+  platforms:
+    windows:
+      psh:
+        command: |
+          $taskName = "WindowsDefenderUpdate_" + (Get-Random);
+          $action   = New-ScheduledTaskAction -Execute "powershell.exe" -Argument "-NoP -W Hidden -c exit";
+          $trigger  = New-ScheduledTaskTrigger -AtLogOn;
+          Register-ScheduledTask -TaskName $taskName -Action $action -Trigger $trigger -RunLevel Highest -Force | Out-Null;
+          Write-Host "[L5-6] Scheduled task created: $taskName"
+        cleanup: |
+          Get-ScheduledTask | Where-Object { $_.TaskName -like "WindowsDefenderUpdate_*" } | Unregister-ScheduledTask -Confirm:$false

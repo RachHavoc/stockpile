@@ -1,0 +1,26 @@
+---
+
+- id: 4a100011-cafe-4001-8001-c0ffee000011
+  name: Send phishing lure email via mail server (L8 Sc.1 step 1)
+  description: Use PowerShell SMTP to send a simulated phishing email through the range mail VM so the mail trace is visible in logs-mail.*
+  tactic: execution
+  technique:
+    attack_id: T1059.001
+    name: "Command and Scripting Interpreter: PowerShell"
+  platforms:
+    windows:
+      psh:
+        command: |
+          $smtp    = New-Object Net.Mail.SmtpClient("#{mail.server.ip}", 25);
+          $msg     = New-Object Net.Mail.MailMessage;
+          $msg.From    = New-Object Net.Mail.MailAddress("attacker@phishing-sim.invalid", "IT Helpdesk");
+          $msg.To.Add("#{target.user.email}");
+          $msg.Subject = "Urgent: Review Your Q4 Invoice";
+          $msg.Body    = "Please review the attached invoice immediately.`nClick here: http://#{attacker.host.ip}/invoice.docm";
+          try {
+            $smtp.Send($msg);
+            Write-Host "[L8-1] Phishing email sent to #{target.user.email} via #{mail.server.ip}"
+          } catch {
+            Write-Host "[L8-1] SMTP send failed: $_"
+          }
+          $msg.Dispose()

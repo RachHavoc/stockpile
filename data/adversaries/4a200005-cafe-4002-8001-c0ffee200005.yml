@@ -1,0 +1,9 @@
+---
+
+id: 4a200005-cafe-4002-8001-c0ffee200005
+name: "L8 Sc.1 - Phishing to C2"
+description: Full phishing-to-C2 kill chain for L8 Scenario 1 — lure email delivered via mail VM, victim executes payload, persistent C2 beacon established
+atomic_ordering:
+  - 4a100011-cafe-4001-8001-c0ffee000011 # Step 1 - Send phishing lure email via mail server (T1566.001)
+  - 4a100012-cafe-4001-8001-c0ffee000012 # Step 2 - Phishing payload execution on victim host (T1204.001)
+  - 4a100013-cafe-4001-8001-c0ffee000013 # Step 3 - Establish persistent C2 beacon channel (T1071.001)

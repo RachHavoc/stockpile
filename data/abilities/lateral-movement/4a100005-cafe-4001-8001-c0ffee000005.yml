@@ -1,0 +1,18 @@
+---
+
+- id: 4a100005-cafe-4001-8001-c0ffee000005
+  name: WMI remote process execution (L5 step 4)
+  description: Use WMI to spawn a process on a remote host (wks02), generating Sysmon EID 3 network events and WMI activity log entries
+  tactic: lateral-movement
+  technique:
+    attack_id: T1021.006
+    name: "Remote Services: Windows Remote Management"
+  platforms:
+    windows:
+      psh:
+        command: |
+          $cmd = "cmd.exe /c echo [L5-4] WMI lateral exec on %COMPUTERNAME% > C:\Windows\Temp\l5_wmi.txt";
+          Invoke-WmiMethod -ComputerName #{remote.host.ip} -Class Win32_Process -Name Create -ArgumentList $cmd -ErrorAction SilentlyContinue;
+          Write-Host "[L5-4] WMI remote process creation sent to #{remote.host.ip}"
+        cleanup: |
+          Invoke-WmiMethod -ComputerName #{remote.host.ip} -Class Win32_Process -Name Create -ArgumentList "cmd.exe /c del C:\Windows\Temp\l5_wmi.txt" -ErrorAction SilentlyContinue | Out-Null

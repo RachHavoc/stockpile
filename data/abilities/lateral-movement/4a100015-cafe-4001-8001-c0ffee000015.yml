@@ -1,0 +1,20 @@
+---
+
+- id: 4a100015-cafe-4001-8001-c0ffee000015
+  name: Lateral movement to database server via SMB (L8 Sc.2 step 2)
+  description: Mount the svr-db01 admin share using stolen credentials to simulate lateral movement, producing Zeek smb_files.log and Windows 4624 on the target
+  tactic: lateral-movement
+  technique:
+    attack_id: T1021.002
+    name: "Remote Services: SMB/Windows Admin Shares"
+  platforms:
+    windows:
+      psh:
+        command: |
+          $secPass = ConvertTo-SecureString "#{domain.user.password}" -AsPlainText -Force;
+          $cred    = New-Object PSCredential("#{domain}\#{domain.user.name}", $secPass);
+          New-PSDrive -Name "SOCDB" -PSProvider FileSystem -Root "\\svr-db01\C$" -Credential $cred -ErrorAction SilentlyContinue | Out-Null;
+          Get-ChildItem "SOCDB:\Users\Public\" -ErrorAction SilentlyContinue | Select-Object -First 5;
+          Write-Host "[L8sc2-2] Lateral movement to svr-db01 complete"
+        cleanup: |
+          Remove-PSDrive -Name "SOCDB" -ErrorAction SilentlyContinue

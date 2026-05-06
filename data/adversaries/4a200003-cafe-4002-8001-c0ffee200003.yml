@@ -1,0 +1,10 @@
+---
+
+id: 4a200003-cafe-4002-8001-c0ffee200003
+name: "L6 - Ransomware Chain"
+description: Four-step kill chain simulating phishing to ransomware impact — phishing doc open, encoded PS dropper, AD account abuse, mass file rename
+atomic_ordering:
+  - 4a10000a-cafe-4001-8001-c0ffee00000a # Step 1 - Phishing simulant document open (T1204.002)
+  - 4a10000b-cafe-4001-8001-c0ffee00000b # Step 2 - Encoded PowerShell stage-2 dropper (T1059.001)
+  - 4a10000c-cafe-4001-8001-c0ffee00000c # Step 3 - AD account abuse / Domain Admins add (T1098.001)
+  - 4a10000d-cafe-4001-8001-c0ffee00000d # Step 4 - Simulated mass file rename (.soc_encrypted) (T1486)

@@ -1,0 +1,9 @@
+---
+
+id: 4a200004-cafe-4002-8001-c0ffee200004
+name: "L7 - Anomaly Patterns"
+description: Three behavioral anomalies spread across L7 morning for students to detect and write rules against — beaconing, unusual JA3 fingerprint, scheduled-task persistence
+atomic_ordering:
+  - 4a10000e-cafe-4001-8001-c0ffee00000e # Anomaly 1 - Periodic HTTP C2 beaconing (T1071.001)
+  - 4a10000f-cafe-4001-8001-c0ffee00000f # Anomaly 2 - HTTPS beacon with unusual JA3 fingerprint (T1071.001)
+  - 4a100010-cafe-4001-8001-c0ffee000010 # Anomaly 3 - Scheduled task persistence with recurring beacon (T1053.005)

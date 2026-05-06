@@ -1,0 +1,19 @@
+---
+
+- id: 4a100004-cafe-4001-8001-c0ffee000004
+  name: Burst of failed logons against domain controller (L5 step 3)
+  description: Attempt ten rapid authentication failures against dc01 to generate a Windows 4625 spike visible in SIEM
+  tactic: credential-access
+  technique:
+    attack_id: T1110.001
+    name: "Brute Force: Password Guessing"
+  platforms:
+    windows:
+      psh:
+        command: |
+          1..10 | ForEach-Object {
+            $n = $_
+            net use '\\dc01\ipc$' /user:#{domain}\soc_invalid_acct "WrongPassword$n" 2>$null | Out-Null
+            net use '\\dc01\ipc$' /delete /y 2>$null | Out-Null
+          }
+          Write-Host '[L5-3] Failed logon burst complete — 10 attempts against dc01'

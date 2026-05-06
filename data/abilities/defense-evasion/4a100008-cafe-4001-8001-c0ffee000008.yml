@@ -1,0 +1,16 @@
+---
+
+- id: 4a100008-cafe-4001-8001-c0ffee000008
+  name: Process injection via CreateRemoteThread (L5 step 7)
+  description: Inject into a benign process using CreateRemoteThread (suspended thread) to generate Sysmon event ID 8
+  tactic: defense-evasion
+  technique:
+    attack_id: T1055.003
+    name: "Process Injection: Thread Execution Hijacking"
+  platforms:
+    windows:
+      psh:
+        command: |
+          powershell.exe -NoP -ExecutionPolicy Bypass -File .\create_remote_thread_sim.ps1
+        payloads:
+          - create_remote_thread_sim.ps1

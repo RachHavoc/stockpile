@@ -1,0 +1,9 @@
+---
+
+id: 4a200006-cafe-4002-8001-c0ffee200006
+name: "L8 Sc.2 - Credential Misuse + Exfil"
+description: Three-step post-compromise chain for L8 Scenario 2 — credential misuse, SMB lateral movement to svr-db01, high-volume data exfiltration generating TLS/TCP session visible in Arkime
+atomic_ordering:
+  - 4a100014-cafe-4001-8001-c0ffee000014 # Step 1 - Valid account credential misuse (T1078.002)
+  - 4a100015-cafe-4001-8001-c0ffee000015 # Step 2 - Lateral movement to svr-db01 via SMB (T1021.002)
+  - 4a100016-cafe-4001-8001-c0ffee000016 # Step 3 - 10 MB data exfil to svr-db01:1433 (T1041)

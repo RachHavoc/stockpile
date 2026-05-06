@@ -1,0 +1,19 @@
+---
+
+- id: 4a10000d-cafe-4001-8001-c0ffee00000d
+  name: Simulated mass file rename (ransomware) (L6 step 4)
+  description: Rename files in the user Documents folder with a .soc_encrypted extension to simulate ransomware impact (T1486), producing high-volume file-rename telemetry
+  tactic: impact
+  technique:
+    attack_id: T1486
+    name: Data Encrypted for Impact
+  platforms:
+    windows:
+      psh:
+        command: |
+          powershell.exe -NoP -ExecutionPolicy Bypass -File .\simulate_ransomware_rename.ps1 -TargetPath "$env:USERPROFILE\Documents" -Extension ".soc_encrypted" -MaxFiles 50
+        cleanup: |
+          Get-ChildItem -Path "$env:USERPROFILE\Documents" -Filter "*.soc_encrypted" -Recurse -ErrorAction SilentlyContinue |
+            ForEach-Object { Rename-Item -Path $_.FullName -NewName ($_.FullName -replace '\.soc_encrypted$','') -ErrorAction SilentlyContinue }
+        payloads:
+          - simulate_ransomware_rename.ps1

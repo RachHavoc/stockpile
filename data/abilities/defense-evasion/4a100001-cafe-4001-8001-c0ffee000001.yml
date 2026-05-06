@@ -1,0 +1,19 @@
+---
+
+- id: 4a100001-cafe-4001-8001-c0ffee000001
+  name: Disable Filebeat on target host
+  description: Stop and disable the Filebeat log-shipper service, creating a telemetry blind spot students must detect via Zeek log absence
+  tactic: defense-evasion
+  technique:
+    attack_id: T1562.001
+    name: "Impair Defenses: Disable or Modify Tools"
+  platforms:
+    windows:
+      psh:
+        command: |
+          Stop-Service -Name "filebeat" -Force -ErrorAction SilentlyContinue;
+          Set-Service -Name "filebeat" -StartupType Disabled -ErrorAction SilentlyContinue;
+          Write-Host "[L4] Filebeat stopped and disabled on $env:COMPUTERNAME"
+        cleanup: |
+          Set-Service -Name "filebeat" -StartupType Automatic -ErrorAction SilentlyContinue;
+          Start-Service -Name "filebeat" -ErrorAction SilentlyContinue

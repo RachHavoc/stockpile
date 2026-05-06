@@ -1,0 +1,17 @@
+---
+
+- id: 4a100009-cafe-4001-8001-c0ffee000009
+  name: Add account to local Administrators group (L5 step 8)
+  description: Add a domain account to the local Administrators group to generate Windows event 4732 (privilege escalation indicator)
+  tactic: persistence
+  technique:
+    attack_id: T1098
+    name: Account Manipulation
+  platforms:
+    windows:
+      cmd:
+        command: |
+          net localgroup administrators #{domain}\#{domain.user.name} /add 2>nul
+          echo [L5-8] Account added to local Administrators — Windows 4732 generated
+        cleanup: |
+          net localgroup administrators #{domain}\#{domain.user.name} /delete 2>nul

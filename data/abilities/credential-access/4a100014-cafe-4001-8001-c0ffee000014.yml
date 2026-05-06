@@ -1,0 +1,22 @@
+---
+
+- id: 4a100014-cafe-4001-8001-c0ffee000014
+  name: Valid account credential misuse (L8 Sc.2 step 1)
+  description: Authenticate to a remote host using known valid credentials to simulate credential abuse — produces Windows 4624 (logon) and 4648 (explicit credentials) events
+  tactic: credential-access
+  technique:
+    attack_id: T1078.002
+    name: "Valid Accounts: Domain Accounts"
+  platforms:
+    windows:
+      psh:
+        command: |
+          $secPass = ConvertTo-SecureString "#{domain.user.password}" -AsPlainText -Force;
+          $cred    = New-Object PSCredential("#{domain}\#{domain.user.name}", $secPass);
+          try {
+            Invoke-Command -ComputerName #{lateral.host.ip} -Credential $cred -ScriptBlock {
+              Write-Host "[L8sc2-1] Authenticated as $env:USERDOMAIN\$env:USERNAME on $env:COMPUTERNAME"
+            } -ErrorAction Stop
+          } catch {
+            Write-Host "[L8sc2-1] Credential misuse attempt failed: $_"
+          }

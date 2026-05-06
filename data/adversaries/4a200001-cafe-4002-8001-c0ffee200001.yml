@@ -1,0 +1,7 @@
+---
+
+id: 4a200001-cafe-4002-8001-c0ffee200001
+name: "L4 - Silent Host"
+description: Disable Filebeat on a chosen host mid-morning of L4 so students detect the telemetry gap via Zeek log absence
+atomic_ordering:
+  - 4a100001-cafe-4001-8001-c0ffee000001 # Disable Filebeat on target host (T1562.001)

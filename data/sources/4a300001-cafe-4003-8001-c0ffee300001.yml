@@ -1,0 +1,48 @@
+---
+
+id: 4a300001-cafe-4003-8001-c0ffee300001
+name: SOC Fundamentals Lab - Range Facts
+facts:
+  # -----------------------------------------------------------------------
+  # Windows domain
+  # -----------------------------------------------------------------------
+  - trait: domain
+    value: SOCRANGE          # CHANGEME: NetBIOS domain name (e.g. SOCRANGE)
+
+  # -----------------------------------------------------------------------
+  # Credential facts used by L5-8, L6-3, L8 Sc.2
+  # Use a low-privilege domain account that exists in the range AD.
+  # -----------------------------------------------------------------------
+  - trait: domain.user.name
+    value: soc.student        # CHANGEME: sAMAccountName of the test account
+  - trait: domain.user.password
+    value: CHANGEME_PASSWORD  # CHANGEME: plaintext password for the test account
+
+  # -----------------------------------------------------------------------
+  # Remote host facts used by L5-4 (WMI lateral wks01 -> wks02)
+  # -----------------------------------------------------------------------
+  - trait: remote.host.ip
+    value: 10.R.99.12         # CHANGEME: IP of wks02 (replace R with range ID)
+
+  # -----------------------------------------------------------------------
+  # Lateral movement target used by L8 Sc.2
+  # -----------------------------------------------------------------------
+  - trait: lateral.host.ip
+    value: 10.R.99.20         # CHANGEME: IP of svr-db01 (replace R with range ID)
+
+  # -----------------------------------------------------------------------
+  # Mail server facts used by L8 Sc.1 (SMTP phishing email)
+  # -----------------------------------------------------------------------
+  - trait: mail.server.ip
+    value: 10.R.99.30         # CHANGEME: IP of the range mail VM (replace R with range ID)
+  - trait: target.user.email
+    value: student@socrange.local  # CHANGEME: recipient address for phishing sim
+
+  # -----------------------------------------------------------------------
+  # Attacker host fact used by L8 Sc.1 phishing email body link
+  # -----------------------------------------------------------------------
+  - trait: attacker.host.ip
+    value: 10.R.99.40         # CHANGEME: IP of Attacker-WKS (replace R with range ID)
+
+rules: []
+relationships: []

