@@ -1,0 +1,26 @@
+---
+
+- id: 4a100018-cafe-4001-8001-c0ffee000018
+  name: Trust all beaconing Caldera agents
+  description: Calls the local Caldera REST API to mark all beaconing agents as trusted. Run this from a Linux agent on the Caldera server when agents are showing as untrusted.
+  tactic: command-and-control
+  technique:
+    attack_id: T1102
+    name: "Web Service"
+  platforms:
+    linux:
+      sh:
+        command: |
+          curl -s -H "KEY: ADMIN123" http://localhost:8888/api/v2/agents | python3 -c "
+          import sys, json
+          agents = json.load(sys.stdin)
+          for a in agents:
+              print(a['paw'])
+          " | while read paw; do
+            curl -s -X PATCH \
+              -H "KEY: ADMIN123" \
+              -H "Content-Type: application/json" \
+              -d '{"trusted": true}' \
+              http://localhost:8888/api/v2/agents/$paw > /dev/null;
+            echo "[trust] Trusted: $paw";
+          done

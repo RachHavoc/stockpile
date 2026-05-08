@@ -1,0 +1,7 @@
+---
+
+id: 4a200007-cafe-4002-8001-c0ffee200007
+name: "Restart Caldera Agents"
+description: Kills and restarts the Caldera rundll32 agent on all trusted hosts. Use when agents go missing after a Caldera restart. Auto-detects DC vs workstation.
+atomic_ordering:
+  - 4a100017-cafe-4001-8001-c0ffee000017 # Restart Caldera agent via scheduled task
