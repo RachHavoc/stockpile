@@ -11,7 +11,8 @@ Write-Host "[L8] Phishing lure executed on $env:COMPUTERNAME by $env:USERNAME"
 $markerDir  = "$env:APPDATA\Microsoft\Windows\Themes"
 $markerFile = "$markerDir\update_$(Get-Date -Format 'yyyyMMddHHmmss').log"
 New-Item -Path $markerDir -ItemType Directory -Force | Out-Null
-Set-Content -Path $markerFile -Value "[L8] SOC-Fundamentals phishing simulation — $(Get-Date -Format 'o')"
+$ts = Get-Date -Format 'yyyyMMdd-HHmmss'
+Set-Content -Path $markerFile -Value ("[L8] SOC-Fundamentals phishing simulation - " + $ts)
 
 # Outbound "initial check-in" beacon visible in Zeek + Arkime
 try {

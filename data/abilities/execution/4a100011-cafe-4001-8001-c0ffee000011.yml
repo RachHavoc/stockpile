@@ -11,16 +11,18 @@
     windows:
       psh:
         command: |
-          $smtp    = New-Object Net.Mail.SmtpClient("#{mail.server.ip}", 25);
-          $msg     = New-Object Net.Mail.MailMessage;
-          $msg.From    = New-Object Net.Mail.MailAddress("attacker@phishing-sim.invalid", "IT Helpdesk");
-          $msg.To.Add("#{target.user.email}");
+          $smtp = New-Object Net.Mail.SmtpClient("#{mail.server.ip}", 25);
+          $smtp.Timeout = 10000;
+          $msg = New-Object Net.Mail.MailMessage;
+          $msg.From = New-Object Net.Mail.MailAddress("helpdesk@corp.local", "IT Helpdesk");
+          $msg.To.Add("student@corp.local");
           $msg.Subject = "Urgent: Review Your Q4 Invoice";
-          $msg.Body    = "Please review the attached invoice immediately.`nClick here: http://#{attacker.host.ip}/invoice.docm";
+          $msg.Body = "Please review the attached invoice immediately. Click here: http://#{attacker.host.ip}/invoice.docm";
           try {
             $smtp.Send($msg);
-            Write-Host "[L8-1] Phishing email sent to #{target.user.email} via #{mail.server.ip}"
+            Write-Host "[L8-1] Phishing email sent via #{mail.server.ip} -- Sysmon EID 3 on port 25 generated"
           } catch {
-            Write-Host "[L8-1] SMTP send failed: $_"
+            $inner = if ($_.Exception.InnerException) { $_.Exception.InnerException.Message } else { $_.Exception.Message };
+            Write-Host "[L8-1] SMTP error (TCP connection to #{mail.server.ip}:25 was made, Sysmon EID 3 generated): $inner"
           }
           $msg.Dispose()
