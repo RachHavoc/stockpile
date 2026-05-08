@@ -16,7 +16,7 @@ L7 - Anomaly Patterns,1,4a10000e,Periodic HTTP C2 beaconing,C2,T1071.001,Executi
 L7 - Anomaly Patterns,2,4a10000f,HTTPS beacon / unusual JA3,C2,T1071.001,Not Detected,Executed - detection fix: event.code 4688 + process.name powershell.exe + process.args *-EncodedCommand*
 L7 - Anomaly Patterns,3,4a100010,Scheduled task persistence,Persistence,T1053.005,Not Detected,Executed - detection fix: event.category process AND process.command_line *Register-ScheduledTask*
 L8 Sc.1 - Phishing to C2,1,4a100011,Send phishing lure email,Execution,T1566.001,Not Tested,
-L8 Sc.1 - Phishing to C2,2,4a100012,Phishing payload execution on victim,Execution,T1204.001,Not Tested,
+L8 Sc.1 - Phishing to C2,2,4a100012,Phishing payload execution on victim,Execution,T1204.001,Not Detected,Executed - 4104 requires script block logging enabled; KQL fix: Sysmon EID 3 - winlog.event_id: "3" AND process.name: "powershell.exe" AND NOT destination.port: ("80" OR "443" OR "53")
 L8 Sc.1 - Phishing to C2,3,4a100013,Establish persistent C2 beacon,C2,T1071.001,Not Tested,
 L8 Sc.2 - Credential Misuse + Exfil,1,4a100014,Valid account credential misuse,Credential Access,T1078.002,Detected,
 L8 Sc.2 - Credential Misuse + Exfil,2,4a100015,Lateral movement to svr-db01 via SMB,Lateral Movement,T1021.002,Not Detected,

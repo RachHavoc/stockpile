@@ -63,7 +63,7 @@ Hunt reference for CCB SOC-Fundies adversary operations. Each section maps to a 
 | Step | Ability | Tactic | Technique | Windows Events | Sysmon | KQL |
 |---|---|---|---|---|---|---|
 | 1 | **4a100011** Send phishing lure email | Execution | T1566.001 – Spearphishing Attachment | 4688, 4104 | 1, 3 (port 25) | `winlog.event_id: "3" AND destination.port: 25 AND process.name: "powershell.exe"` |
-| 2 | **4a100012** Phishing payload execution on victim | Execution | T1204.001 – Malicious Link | 4688, **4104** | 1, 3 | `event.code: "4104" AND powershell.file.script_block_text: (*Invoke-WebRequest* OR *WebClient*)` |
+| 2 | **4a100012** Phishing payload execution on victim | Execution | T1204.001 – Malicious Link | 4688 | **1**, **3** | `winlog.event_id: "3" AND process.name: "powershell.exe" AND NOT destination.port: ("80" OR "443" OR "53")` |
 | 3 | **4a100013** Establish persistent C2 beacon | C2 | T1071.001 – Web Protocols | 4688 | 3 | `winlog.event_id: "3" AND process.name: "powershell.exe" AND NOT destination.port: (80 OR 443 OR 53)` |
 
 ---
