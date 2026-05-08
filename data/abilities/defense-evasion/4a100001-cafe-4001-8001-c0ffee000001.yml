@@ -16,4 +16,6 @@
           Write-Host "[L4] Filebeat stopped and disabled on $env:COMPUTERNAME"
         cleanup: |
           Set-Service -Name "filebeat" -StartupType Automatic -ErrorAction SilentlyContinue;
-          Start-Service -Name "filebeat" -ErrorAction SilentlyContinue
+          Start-Sleep -Seconds 2;
+          Start-Service -Name "filebeat" -ErrorAction SilentlyContinue;
+          Write-Host "[L4] Filebeat re-enabled and restarted on $env:COMPUTERNAME"

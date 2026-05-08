@@ -15,4 +15,5 @@
           $encoded = [Convert]::ToBase64String([System.Text.Encoding]::Unicode.GetBytes($stage2));
           powershell.exe -NoP -NonI -W Hidden -Enc $encoded
         cleanup: |
-          Remove-Item -Force "$env:APPDATA\Microsoft\Windows\stage2_marker.log" -ErrorAction SilentlyContinue
+          Remove-Item -Force "$env:TEMP\stage2_marker.log" -ErrorAction SilentlyContinue;
+          Write-Host "[L6-2] Cleanup: stage2 marker removed"

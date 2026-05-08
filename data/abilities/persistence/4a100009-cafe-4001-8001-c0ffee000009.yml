@@ -9,9 +9,12 @@
     name: Account Manipulation
   platforms:
     windows:
-      cmd:
+      psh:
         command: |
-          net localgroup administrators #{domain}\#{domain.user.name} /add 2>nul
-          echo [L5-8] Account added to local Administrators — Windows 4732 generated
+          $tempUser = "svc_" + (Get-Random -Maximum 9999);
+          New-LocalUser -Name $tempUser -NoPassword -ErrorAction SilentlyContinue | Out-Null;
+          Add-LocalGroupMember -Group "Administrators" -Member $tempUser -ErrorAction SilentlyContinue;
+          Write-Host "[L5-8] Added $tempUser to Administrators -- Windows 4732 generated"
         cleanup: |
-          net localgroup administrators #{domain}\#{domain.user.name} /delete 2>nul
+          Get-LocalUser | Where-Object { $_.Name -like "svc_*" } | Remove-LocalUser -ErrorAction SilentlyContinue;
+          Write-Host "[L5-8] Cleanup: temp local account removed"

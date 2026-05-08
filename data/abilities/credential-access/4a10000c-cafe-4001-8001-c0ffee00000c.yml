@@ -9,9 +9,12 @@
     name: Account Manipulation
   platforms:
     windows:
-      cmd:
+      psh:
         command: |
-          net group "Domain Admins" #{domain}\#{domain.user.name} /add /domain 2>nul
-          echo [L6-3] Account #{domain.user.name} added to Domain Admins
+          $tempUser = "svc_da_" + (Get-Random -Maximum 9999);
+          New-LocalUser -Name $tempUser -NoPassword -ErrorAction SilentlyContinue | Out-Null;
+          net localgroup "Administrators" $tempUser /add 2>$null | Out-Null;
+          Write-Host "[L6-3] Added $tempUser to Administrators -- Windows 4732 generated"
         cleanup: |
-          net group "Domain Admins" #{domain}\#{domain.user.name} /delete /domain 2>nul
+          Get-LocalUser | Where-Object { $_.Name -like "svc_da_*" } | Remove-LocalUser -ErrorAction SilentlyContinue;
+          Write-Host "[L6-3] Cleanup: temp DA simulant account removed"
