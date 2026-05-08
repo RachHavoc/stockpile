@@ -12,8 +12,8 @@
       psh:
         command: |
           1..10 | ForEach-Object {
-            $n = $_
-            net use '\\dc01\ipc$' /user:#{domain}\soc_invalid_acct "WrongPassword$n" 2>$null | Out-Null
-            net use '\\dc01\ipc$' /delete /y 2>$null | Out-Null
-          }
-          Write-Host '[L5-3] Failed logon burst complete — 10 attempts against dc01'
+            $n = $_;
+            & net use "\\dc01\ipc$" "/user:#{domain}\soc_invalid_acct" "WrongPassword$n" 2>&1 | Out-Null;
+            & net use "\\dc01\ipc$" /delete /y 2>&1 | Out-Null
+          };
+          Write-Host '[L5-3] Failed logon burst complete -- 10 attempts against dc01'

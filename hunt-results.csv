@@ -1,0 +1,23 @@
+Adversary Profile,Step,Ability ID,Ability Name,Tactic,Technique,Result,Notes
+L4 - Silent Host,1,4a100001,Disable Filebeat,Defense Evasion,T1562.001,Detected,KQL fix: winlog.event_id: 7036 AND winlog.event_data.param2: "stopped"
+L5 - Alert Generator,1,4a100002,Encoded PowerShell,Execution,T1059.001,Detected,
+L5 - Alert Generator,2,4a100003,DNS query to unknown domain,C2,T1071.004,Not Detected,Executed (NXDOMAIN confirmed) - KQL fix: use winlog.event_data.QueryName not dns.question.name
+L5 - Alert Generator,3,4a100004,Burst of failed logons vs DC,Credential Access,T1110.001,Execution Failed,Unexpected token net - fixed: added & call operator and 2>&1 redirect
+L5 - Alert Generator,4,4a100005,WMI lateral movement,Lateral Movement,T1021.006,Not Detected,Executed - WmiPrvSE ParentImage field invalid + no Zeek - KQL fix: winlog.event_id: 3 AND destination.port: 135
+L5 - Alert Generator,5,4a100006,Large outbound data transfer,Exfiltration,T1041,Not Detected,Executed - no Zeek data - KQL fix: winlog.event_id: 3 AND destination.port: 8888
+L5 - Alert Generator,6,4a100007,Scheduled task creation,Persistence,T1053.005,Not Detected,Executed - check audit policy for event 4698
+L5 - Alert Generator,7,4a100008,Process injection via CreateRemoteThread,Defense Evasion,T1055.003,Execution Failed,Here-string syntax error in ps1 payload - fixed: replaced here-string with string concatenation
+L5 - Alert Generator,8,4a100009,Add account to local Administrators,Persistence,T1098,Detected,KQL fix: use winlog.event_data.TargetUserName: "Administrators" instead of MemberName
+L6 - Ransomware Chain,1,4a10000a,Phishing simulant - open lure doc,Execution,T1204.002,Detected,process.command_line query invalid - KQL fix: process.name: notepad.exe AND process.parent.name: powershell.exe
+L6 - Ransomware Chain,2,4a10000b,Encoded PowerShell dropper,Execution,T1059.001,Detected,
+L6 - Ransomware Chain,3,4a10000c,AD account abuse - add to Admins,Credential Access,T1098,Detected,4732 works - MemberName field invalid - KQL fix: winlog.event_data.TargetUserName: Administrators
+L6 - Ransomware Chain,4,4a10000d,Simulated mass file rename,Impact,T1486,Detected,Event code good - file.name field invalid - KQL fix: process.command_line: *simulate_ransomware_rename*
+L7 - Anomaly Patterns,1,4a10000e,Periodic HTTP C2 beaconing,C2,T1071.001,Execution Failed,Timed out - fixed: reduced to 5 beacons x 10s. Detection fix: event.code 4688 + process.args *-EncodedCommand*
+L7 - Anomaly Patterns,2,4a10000f,HTTPS beacon / unusual JA3,C2,T1071.001,Not Detected,Executed - detection fix: event.code 4688 + process.name powershell.exe + process.args *-EncodedCommand*
+L7 - Anomaly Patterns,3,4a100010,Scheduled task persistence,Persistence,T1053.005,Not Detected,Executed - detection fix: event.category process AND process.command_line *Register-ScheduledTask*
+L8 Sc.1 - Phishing to C2,1,4a100011,Send phishing lure email,Execution,T1566.001,Not Tested,
+L8 Sc.1 - Phishing to C2,2,4a100012,Phishing payload execution on victim,Execution,T1204.001,Not Tested,
+L8 Sc.1 - Phishing to C2,3,4a100013,Establish persistent C2 beacon,C2,T1071.001,Not Tested,
+L8 Sc.2 - Credential Misuse + Exfil,1,4a100014,Valid account credential misuse,Credential Access,T1078.002,Detected,
+L8 Sc.2 - Credential Misuse + Exfil,2,4a100015,Lateral movement to svr-db01 via SMB,Lateral Movement,T1021.002,Not Detected,
+L8 Sc.2 - Credential Misuse + Exfil,3,4a100016,Data exfil to svr-db01:1433,Exfiltration,T1041,Not Detected,No zeek.conn index - use Sysmon event 3
